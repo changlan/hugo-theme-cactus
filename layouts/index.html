@@ -36,8 +36,14 @@
   {{ end }}
   </section>
 
+  {{ $showBlog := false }}
+  {{ if .Site.RegularPages }}
+    {{ $showBlog = true }}
+  {{ end }}
+
+  {{ if $showBlog }}
   <section id="writing">
-    <span class="h1"><a href="{{ .Site.Params.mainSection | absURL }}">Writings</a></span>
+    <span class="h1"><a href="{{ .Site.Params.mainSection | absURL }}">Blog</a></span>
     {{ if (and (and (isset .Site.Params "tagsoverview") (eq .Site.Params.tagsOverview true)) (gt (len .Site.Taxonomies.tags) 0)) }}
     <span class="h2">Topics</span>
     <span class="widget tagcloud">
@@ -84,24 +90,27 @@
     </ul>
     {{ end }}
   </section>
-
-  {{ $showProjectsList := false }}
-  {{ if .Site.Data.projects }}
-    {{ $showProjectsList = true }}
-  {{ else if (isset .Site.Params "showProjectsList") }}
-    {{ $showProjectsList = .Site.Params.ShowProjectsList }}
   {{ end }}
-  {{ if $showProjectsList }}
-    {{ $projectsUrl := "#" }}
-    {{ if isset .Site.Params "projectsUrl" }}
-      {{ $projectsUrl = .Site.Params.projectsUrl }}
+
+  {{ $showPapersList := false }}
+  {{ if .Site.Data.papers }}
+    {{ $showPapersList = true }}
+  {{ else if (isset .Site.Params "showPapersList") }}
+    {{ $showPapersList = .Site.Params.showPapersList }}
+  {{ end }}
+  {{ if $showPapersList }}
+    {{ $PapersUrl := "https://scholar.google.com/citations?user=UdrezzQAAAAJ&hl=en" }}
+    {{ if isset .Site.Params "PapersUrl" }}
+      {{ $PapersUrl = .Site.Params.PapersUrl }}
     {{ end }}
   <section id="projects">
-    <span class="h1"><a href="{{ $projectsUrl }}">Projects</a></span>
+    <span class="h1"><a href="{{ $PapersUrl }}">Papers</a></span>
     <ul class="project-list">
-        {{ range .Site.Data.projects.list }}
+        {{ range .Site.Data.papers.list }}
         <li class="project-item">
-          <a href="{{ .url }}">{{ .name }}</a>: {{ .desc | markdownify }}
+          <a href="{{ .url }}">{{ .title }}</a><br/>
+          {{ delimit .authors ", " ", and "}} <br/>
+          {{ .venue }}
         </li>
         {{ end }}
     </ul>
